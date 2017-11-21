@@ -23,8 +23,9 @@ public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
 
     private OmdbAPI service;
     private MovieAdapter adapter;
+    private String searchQuery;
 
-    public MovieSearchTask(MovieAdapter adapter) {
+    public MovieSearchTask(MovieAdapter adapter, String searchQuery) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.omdbapi.com/?")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -32,6 +33,7 @@ public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
 
         this.service = retrofit.create(OmdbAPI.class);
         this.adapter = adapter;
+        this.searchQuery = searchQuery;
     }
 
 
@@ -50,7 +52,7 @@ public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
 
     @Override
     protected List<Movie> doInBackground(Void... voids) {
-        Call<ApiSearchResult> call = service.searchMovieByName("batman", "c24fc4e1");
+        Call<ApiSearchResult> call = service.searchMovieByName(searchQuery, "c24fc4e1");
         try {
             ApiSearchResult res = call.execute().body();
             return res.Search;

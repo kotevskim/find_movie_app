@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.martin.mppmovieapp.adapters.MovieAdapter;
@@ -22,9 +24,19 @@ public class MoviesActivity extends AppCompatActivity {
 
         initRecyclerView();
 
+        Button btn = (Button) findViewById(R.id.btn_search);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText et = (EditText) findViewById(R.id.et_input_movie);
+                String searchQuery = et.getText().toString();
+                MovieSearchTask task = new MovieSearchTask(adapter, searchQuery);
+                task.execute();
+            }
+        });
 
-        MovieSearchTask task = new MovieSearchTask(this.adapter);
-        task.execute();
+
+
 //        Intent intent = new Intent(this, MovieDetailsActivity.class);
 //        this.startActivity(intent);
     }
@@ -50,7 +62,9 @@ public class MoviesActivity extends AppCompatActivity {
 
                     @Override
                     public void onLongClickItem(View v, int position) {
-
+                        adapter.movieList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                     }
                 }));
     }

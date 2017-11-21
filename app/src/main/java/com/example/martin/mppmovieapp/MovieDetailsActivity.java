@@ -1,7 +1,10 @@
 package com.example.martin.mppmovieapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +28,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         TextView tv_movie_full_plot = (TextView) findViewById(R.id.tv_movie_plot_full);
         ImageView iv_movie_poster = (ImageView)  findViewById(R.id.iv_movie_poster);
 
+        final String movieTitle = tv_movie_title.getText().toString();
+        Button btn = (Button) findViewById(R.id.btn_share);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, movieTitle);
+                startActivity(Intent.createChooser(shareIntent, "Spodeli go filmot so..."));
+            }
+        });
+
+
+
+
         //        TODO implemet this
 //        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
 //                (this.LAYOUT_INFLATER_SERVICE);
@@ -32,5 +50,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         MovieGetTask task = new MovieGetTask(this, movieId ,tv_movie_title, tv_movie_year, tv_movie_full_plot, iv_movie_poster);
         task.execute();
+
+
     }
 }

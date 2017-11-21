@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
 
-    private List<Movie> movieList;
+    public List<Movie> movieList;
     private Context context;
 
     public MovieAdapter(Context context) {
@@ -74,6 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             tvMovieYear = (TextView) itemView.findViewById(R.id.item_movie_year);
             tvMovieId = (TextView) itemView.findViewById(R.id.item_movie_id);
         }
+
     }
 
 }

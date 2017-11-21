@@ -1,8 +1,10 @@
 package com.example.martin.mppmovieapp.tasks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -66,8 +68,6 @@ public class MovieGetTask extends AsyncTask<Void, Void, Movie> {
                 .load(movie.getPoster())
                 .placeholder(R.mipmap.ic_launcher)
                 .into(this.iv_movie_poster);
-
-
     }
 
     @Override
