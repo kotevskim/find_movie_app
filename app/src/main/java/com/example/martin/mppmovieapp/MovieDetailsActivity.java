@@ -23,22 +23,32 @@ public class MovieDetailsActivity extends AppCompatActivity {
             movieId = extras.getString("id");
         }
 
-        TextView tv_movie_title = (TextView) findViewById(R.id.tv_movie_title);
+        final TextView tv_movie_title = (TextView) findViewById(R.id.tv_movie_title);
         TextView tv_movie_year = (TextView) findViewById(R.id.tv_movie_year);
         TextView tv_movie_full_plot = (TextView) findViewById(R.id.tv_movie_plot_full);
         ImageView iv_movie_poster = (ImageView)  findViewById(R.id.iv_movie_poster);
 
-        final String movieTitle = tv_movie_title.getText().toString();
         Button btn = (Button) findViewById(R.id.btn_share);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, movieTitle);
+                final String movieTitle = tv_movie_title.getText().toString();
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Hey, this movie is good: " +  movieTitle);
                 startActivity(Intent.createChooser(shareIntent, "Spodeli go filmot so..."));
             }
         });
+
+        btn = (Button) findViewById(R.id.btn_back1);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
 
 
 

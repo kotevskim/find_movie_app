@@ -16,6 +16,13 @@
         app:popupTheme="@style/Theme.AppCompat.Light" >
 
         <Button
+            android:id="@+id/btn_back1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="Back" />
+
+        <Button
             android:id="@+id/btn_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
