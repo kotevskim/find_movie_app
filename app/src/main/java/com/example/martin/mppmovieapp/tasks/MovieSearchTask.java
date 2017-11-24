@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
 
-    private OmdbAPI service;
+    private OmdbAPI webApi;
     private MovieAdapter adapter;
     private String searchQuery;
 
@@ -31,7 +31,7 @@ public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        this.service = retrofit.create(OmdbAPI.class);
+        this.webApi = retrofit.create(OmdbAPI.class);
         this.adapter = adapter;
         this.searchQuery = searchQuery;
     }
@@ -52,7 +52,7 @@ public class MovieSearchTask extends AsyncTask<Void, Void, List<Movie>> {
 
     @Override
     protected List<Movie> doInBackground(Void... voids) {
-        Call<ApiSearchResult> call = service.searchMovieByName(searchQuery, "c24fc4e1");
+        Call<ApiSearchResult> call = webApi.searchMovieByName(searchQuery, "c24fc4e1");
         try {
             ApiSearchResult res = call.execute().body();
             return res.Search;

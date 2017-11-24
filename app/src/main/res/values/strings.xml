@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MppMovieApp</string>
+    <string name="omdb_api_key">c24fc4e1</string>
 </resources>

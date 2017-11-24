@@ -1,6 +1,12 @@
 package com.example.martin.mppmovieapp;
 
+import java.util.List;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,19 +16,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.martin.mppmovieapp.model.Movie;
 import com.example.martin.mppmovieapp.adapters.MovieAdapter;
-import com.example.martin.mppmovieapp.tasks.MovieSearchTask;
+import com.example.martin.mppmovieapp.services.FetchMoviesService;
+
+import static com.example.martin.mppmovieapp.services.FetchMoviesService.DATA_LOADED;
 
 public class MoviesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MovieAdapter adapter;
-    private MovieSearchTask task;
+    private MoviesLoadedReceiver receiver;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-
+        receiver = new MoviesLoadedReceiver();
         initRecyclerView();
 
         Button btn = (Button) findViewById(R.id.btn_search);
@@ -31,15 +40,12 @@ public class MoviesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText et = (EditText) findViewById(R.id.et_input_movie);
                 String searchQuery = et.getText().toString();
-                task = new MovieSearchTask(adapter, searchQuery);
-                task.execute();
+                Intent intent = new Intent(getApplicationContext(), FetchMoviesService.class);
+                intent.putExtra("searchQuery", searchQuery);
+                startService(intent);
             }
         });
 
-
-
-//        Intent intent = new Intent(this, MovieDetailsActivity.class);
-//        this.startActivity(intent);
     }
 
     private void initRecyclerView() {
@@ -71,14 +77,27 @@ public class MoviesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected  void onDestroy() {
-        cancelTask(); // we have to manage the lyfecycle of the AsycTask
-        super.onDestroy();
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(DATA_LOADED);
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .registerReceiver(receiver, filter);
     }
 
-    private void cancelTask() {
-        if (task != null) {
-            task.cancel(true);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .unregisterReceiver(receiver);
+    }
+
+    public class MoviesLoadedReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<Movie> moviesFromServer = intent.getParcelableArrayListExtra("movies_from_server");
+            adapter.setData(moviesFromServer);
+            adapter.notifyDataSetChanged();
         }
     }
 }
