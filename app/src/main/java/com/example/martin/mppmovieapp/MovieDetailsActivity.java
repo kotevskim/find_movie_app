@@ -12,6 +12,8 @@ import com.example.martin.mppmovieapp.tasks.MovieGetTask;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
+    private MovieGetTask task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,19 +50,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
         //        TODO implemet this
 //        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
 //                (this.LAYOUT_INFLATER_SERVICE);
 //        View view = inflater.inflate(R.layout.activity_movie_details,null);
 
-        MovieGetTask task = new MovieGetTask(this, movieId ,tv_movie_title, tv_movie_year, tv_movie_full_plot, iv_movie_poster);
+        task = new MovieGetTask(getApplicationContext(), movieId ,tv_movie_title, tv_movie_year, tv_movie_full_plot, iv_movie_poster);
         task.execute();
+    }
 
+    @Override
+    protected  void onDestroy() {
+        cancelTask(); // we have to manage the lyfecycle of the AsycTask
+        super.onDestroy();
+    }
 
+    private void cancelTask() {
+        if (task != null) {
+            task.cancel(true);
+        }
     }
 }

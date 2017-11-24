@@ -17,6 +17,7 @@ public class MoviesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MovieAdapter adapter;
+    private MovieSearchTask task;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class MoviesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText et = (EditText) findViewById(R.id.et_input_movie);
                 String searchQuery = et.getText().toString();
-                MovieSearchTask task = new MovieSearchTask(adapter, searchQuery);
+                task = new MovieSearchTask(adapter, searchQuery);
                 task.execute();
             }
         });
@@ -44,7 +45,7 @@ public class MoviesActivity extends AppCompatActivity {
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(llm);
         this.adapter = new MovieAdapter(getApplicationContext());
         mRecyclerView.setAdapter(adapter);
@@ -67,5 +68,17 @@ public class MoviesActivity extends AppCompatActivity {
                         adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                     }
                 }));
+    }
+
+    @Override
+    protected  void onDestroy() {
+        cancelTask(); // we have to manage the lyfecycle of the AsycTask
+        super.onDestroy();
+    }
+
+    private void cancelTask() {
+        if (task != null) {
+            task.cancel(true);
+        }
     }
 }
