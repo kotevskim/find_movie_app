@@ -1,5 +1,6 @@
 package com.example.martin.mppmovieapp;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +20,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.martin.mppmovieapp.loaders.DeleteMovieFromDbLoader;
 import com.example.martin.mppmovieapp.loaders.MoviesLoader;
 import com.example.martin.mppmovieapp.model.Movie;
 import com.example.martin.mppmovieapp.adapters.MovieAdapter;
-import com.example.martin.mppmovieapp.persistence.AppDatabase;
 import com.example.martin.mppmovieapp.services.FetchMoviesService;
 
 import static com.example.martin.mppmovieapp.services.FetchMoviesService.DATA_LOADED;
 
-public class MoviesActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<Movie>> {
+public class MoviesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MovieAdapter adapter;
     private MoviesLoadedReceiver receiver;
+
+    private static final int MOVIES_LOADER_ID = 1;
+    private static final int DELETE_MOVIE_FROM_DB_LOADER_ID = 2;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,15 +83,23 @@ public class MoviesActivity extends AppCompatActivity
                         adapter.movieList.remove(position);
                         adapter.notifyItemRemoved(position);
                         adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                        // TODO should be done on a separate thread
-//                        AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
-//                        db.movieDao().delete(m);
+                        deleteMovieFromDatabase(m);
                     }
                 }));
     }
 
     private void loadDataFromDatabase() {
-        this.getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+        this.getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener).forceLoad();
+    }
+
+    private void deleteMovieFromDatabase(Movie m) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("movie", m);
+        this.getSupportLoaderManager().initLoader(
+                DELETE_MOVIE_FROM_DB_LOADER_ID,
+                bundle,
+                deleteMovieFromDbLoaderListener)
+                .forceLoad();
     }
 
     @Override
@@ -110,26 +121,49 @@ public class MoviesActivity extends AppCompatActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<Movie> moviesFromServer = intent.getParcelableArrayListExtra("movies_from_server");
+            List<Movie> moviesFromServer
+                    = intent.getParcelableArrayListExtra("movies_from_server");
             adapter.setData(moviesFromServer);
             adapter.notifyDataSetChanged();
         }
     }
 
-    // Methods from LoaderManager.LoaderCallbacks interface
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MoviesLoader(getApplicationContext());
-    }
+    private LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener
+            = new LoaderManager.LoaderCallbacks<List<Movie>>() {
+        @Override
+        public Loader onCreateLoader(int id, Bundle args) {
+            return new MoviesLoader(getApplicationContext());
+        }
 
-    @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
-        this.adapter.setData(data);
-    }
+        @Override
+        public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
+            adapter.setData(data);
+        }
 
-    @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
-        this.adapter.setData(new ArrayList<Movie>());
-    }
+        @Override
+        public void onLoaderReset(Loader loader) {
+            adapter.setData(new ArrayList<Movie>());
+        }
+    };
+
+    private LoaderManager.LoaderCallbacks<Void> deleteMovieFromDbLoaderListener =
+            new LoaderManager.LoaderCallbacks<Void>() {
+                @Override
+                public Loader<Void> onCreateLoader(int id, Bundle args) {
+                    Movie movie =  args.getParcelable("movie");
+                    return new DeleteMovieFromDbLoader(getApplicationContext(), movie);
+                }
+
+                @Override
+                public void onLoadFinished(Loader<Void> loader, Void data) {
+                    // TODO make propper logging
+                    System.out.println("deleted");
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Void> loader) {
+
+                }
+            };
 
 }
