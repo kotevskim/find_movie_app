@@ -1,6 +1,5 @@
 package com.example.martin.mppmovieapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

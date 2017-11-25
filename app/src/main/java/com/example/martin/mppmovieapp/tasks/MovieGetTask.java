@@ -60,7 +60,7 @@ public class MovieGetTask extends AsyncTask<Void, Void, Movie> {
     @Override
     protected void onPostExecute(Movie movie) {
         super.onPostExecute(movie);
-        this.tv_movie_title.setText(movie.getName());
+        this.tv_movie_title.setText(movie.getTitle());
         this.tv_movie_year.setText(movie.getYear());
         this.tv_movie_full_plot.setText(movie.getPlot());
         Picasso

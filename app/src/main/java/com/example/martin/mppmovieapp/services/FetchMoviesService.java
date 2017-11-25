@@ -9,6 +9,7 @@ import com.example.martin.mppmovieapp.OmdbAPI;
 import com.example.martin.mppmovieapp.R;
 import com.example.martin.mppmovieapp.model.ApiSearchResult;
 import com.example.martin.mppmovieapp.model.Movie;
+import com.example.martin.mppmovieapp.persistence.AppDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,17 +39,29 @@ public class FetchMoviesService extends IntentService {
             String query = intent.getStringExtra("searchQuery");
             String apiKey = getString(R.string.omdb_api_key);
             Call<ApiSearchResult> call = webApi.searchMovieByName(query, apiKey);
-
             try {
                 ApiSearchResult apiRes = call.execute().body();
                 List<Movie> movies = apiRes.Search;
-                // TODO write to database
-                Intent i = new Intent(DATA_LOADED);
-                i.putParcelableArrayListExtra("movies_from_server", new ArrayList<Parcelable>(movies));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+                notifyDataFetched(movies);
+                storeInDatabase(movies);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void notifyDataFetched(List<Movie> movies) {
+        Intent i = new Intent(DATA_LOADED);
+        i.putParcelableArrayListExtra("movies_from_server", new ArrayList<Parcelable>(movies));
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+    }
+
+    private void storeInDatabase(List<Movie> movies) {
+        try {
+            AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
+            db.movieDao().insertAll(movies.toArray(new Movie[]{}));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
     }
 

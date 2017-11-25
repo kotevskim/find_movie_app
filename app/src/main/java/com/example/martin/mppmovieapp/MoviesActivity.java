@@ -1,11 +1,14 @@
 package com.example.martin.mppmovieapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.Loader;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,13 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.martin.mppmovieapp.loaders.MoviesLoader;
 import com.example.martin.mppmovieapp.model.Movie;
 import com.example.martin.mppmovieapp.adapters.MovieAdapter;
 import com.example.martin.mppmovieapp.services.FetchMoviesService;
 
 import static com.example.martin.mppmovieapp.services.FetchMoviesService.DATA_LOADED;
 
-public class MoviesActivity extends AppCompatActivity {
+public class MoviesActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<List<Movie>>{
 
     private RecyclerView mRecyclerView;
     private MovieAdapter adapter;
@@ -33,6 +38,7 @@ public class MoviesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies);
         receiver = new MoviesLoadedReceiver();
         initRecyclerView();
+        loadDataFromDatabase(); // async operation, must be done on a separate thread
 
         Button btn = (Button) findViewById(R.id.btn_search);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +52,10 @@ public class MoviesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadDataFromDatabase() {
+        this.getSupportLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     private void initRecyclerView() {
@@ -100,4 +110,22 @@ public class MoviesActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+    // Methods from LoaderManager.LoaderCallbacks interface
+
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+        return new MoviesLoader(getApplicationContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
+        this.adapter.setData(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Movie>> loader) {
+        this.adapter.setData(new ArrayList<Movie>());
+    }
+
 }

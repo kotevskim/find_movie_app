@@ -41,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Movie m = movieList.get(position);
-        holder.tvMovieTitle.setText(m.getName());
+        holder.tvMovieTitle.setText(m.getTitle());
         holder.tvMovieYear.setText(m.getYear());
         holder.tvMovieId.setText(m.getImdbID());
         Picasso
