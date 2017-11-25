@@ -22,12 +22,13 @@ import android.widget.TextView;
 import com.example.martin.mppmovieapp.loaders.MoviesLoader;
 import com.example.martin.mppmovieapp.model.Movie;
 import com.example.martin.mppmovieapp.adapters.MovieAdapter;
+import com.example.martin.mppmovieapp.persistence.AppDatabase;
 import com.example.martin.mppmovieapp.services.FetchMoviesService;
 
 import static com.example.martin.mppmovieapp.services.FetchMoviesService.DATA_LOADED;
 
 public class MoviesActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<Movie>>{
+        implements LoaderManager.LoaderCallbacks<List<Movie>> {
 
     private RecyclerView mRecyclerView;
     private MovieAdapter adapter;
@@ -54,10 +55,6 @@ public class MoviesActivity extends AppCompatActivity
 
     }
 
-    private void loadDataFromDatabase() {
-        this.getSupportLoaderManager().initLoader(0, null, this).forceLoad();
-    }
-
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         mRecyclerView.setHasFixedSize(true);
@@ -79,11 +76,19 @@ public class MoviesActivity extends AppCompatActivity
 
                     @Override
                     public void onLongClickItem(View v, int position) {
+                        Movie m = adapter.movieList.get(position);
                         adapter.movieList.remove(position);
                         adapter.notifyItemRemoved(position);
                         adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                        // TODO should be done on a separate thread
+//                        AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
+//                        db.movieDao().delete(m);
                     }
                 }));
+    }
+
+    private void loadDataFromDatabase() {
+        this.getSupportLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     @Override
@@ -112,7 +117,6 @@ public class MoviesActivity extends AppCompatActivity
     }
 
     // Methods from LoaderManager.LoaderCallbacks interface
-
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
         return new MoviesLoader(getApplicationContext());

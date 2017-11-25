@@ -27,10 +27,14 @@ public interface MovieDao {
     Movie findById(String id);
 
     @Insert
+    void insert(Movie movie);
+
+    @Insert
     void insertAll(Movie... movies);
 
     @Update
     void update(Movie movie);
+
     @Delete
     void delete(Movie movie);
 }

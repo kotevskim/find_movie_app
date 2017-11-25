@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.database.sqlite.SQLiteConstraintException;
 
 import com.example.martin.mppmovieapp.OmdbAPI;
 import com.example.martin.mppmovieapp.R;
@@ -57,12 +58,17 @@ public class FetchMoviesService extends IntentService {
     }
 
     private void storeInDatabase(List<Movie> movies) {
-        try {
             AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
-            db.movieDao().insertAll(movies.toArray(new Movie[]{}));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
+            for (Movie m : movies) {
+                try {
+                    db.movieDao().insert(m);
+                } catch (SQLiteConstraintException e) {
+                    // Movie already exist in the database
+                    System.out.println("yes");
+                    continue;
+                }
+            }
+
     }
 
 }

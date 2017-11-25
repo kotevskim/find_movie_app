@@ -32,11 +32,11 @@ public class Movie implements Parcelable {
         String[] data = new String[5];
         in.readStringArray(data);
         // The order needs to be the same as in writeToParcel method
-        this.setTitle(data[0]);
-        this.setYear(data[1]);
-        this.setPlot(data[2]);
-        this.setPoster(data[3]);
-        this.setImdbID(data[4]);
+        Title = data[0];
+        Year = data[1];
+        Plot = data[2];
+        Poster = data[3];
+        imdbID = data[4];
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{
-                this.getTitle(), this.getYear(), this.getPlot(), this.getPoster(), this.getImdbID()
+                Title, Year, Plot, Poster, imdbID
         });
     }
 
