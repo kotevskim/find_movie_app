@@ -1,6 +1,5 @@
 package com.example.martin.mppmovieapp;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
+import com.example.martin.mppmovieapp.listeners.RecyclerItemListener;
 import com.example.martin.mppmovieapp.loaders.DeleteMovieFromDbLoader;
 import com.example.martin.mppmovieapp.loaders.MoviesLoader;
 import com.example.martin.mppmovieapp.model.Movie;
@@ -65,15 +64,17 @@ public class MoviesActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(llm);
         this.adapter = new MovieAdapter(getApplicationContext());
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemListener(getApplicationContext(), mRecyclerView,
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemListener(
+                getApplicationContext(),
+                mRecyclerView,
                 new RecyclerItemListener.RecyclerTouchListener() {
 
                     @Override
                     public void onClickItem(View v, int position) {
-                        TextView tv = (TextView) v.findViewById(R.id.item_movie_id);
-                        String movieId = tv.getText().toString();
+                        Movie m = adapter.movieList.get(position);
+                        String movieId = m.getImdbID();
                         Intent intent = new Intent(getApplicationContext(), MovieDetailsActivity.class);
-                        intent.putExtra("id", movieId);
+                        intent.putExtra("movie_id", movieId);
                         startActivity(intent);
                     }
 
@@ -131,7 +132,7 @@ public class MoviesActivity extends AppCompatActivity {
     private LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener
             = new LoaderManager.LoaderCallbacks<List<Movie>>() {
         @Override
-        public Loader onCreateLoader(int id, Bundle args) {
+        public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
             return new MoviesLoader(getApplicationContext());
         }
 
@@ -150,7 +151,7 @@ public class MoviesActivity extends AppCompatActivity {
             new LoaderManager.LoaderCallbacks<Void>() {
                 @Override
                 public Loader<Void> onCreateLoader(int id, Bundle args) {
-                    Movie movie =  args.getParcelable("movie");
+                    Movie movie = args.getParcelable("movie");
                     return new DeleteMovieFromDbLoader(getApplicationContext(), movie);
                 }
 

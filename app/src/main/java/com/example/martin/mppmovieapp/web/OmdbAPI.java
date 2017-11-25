@@ -1,4 +1,4 @@
-package com.example.martin.mppmovieapp;
+package com.example.martin.mppmovieapp.web;
 
 import com.example.martin.mppmovieapp.model.ApiSearchResult;
 import com.example.martin.mppmovieapp.model.Movie;

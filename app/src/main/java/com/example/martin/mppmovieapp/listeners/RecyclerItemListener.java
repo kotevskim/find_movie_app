@@ -1,4 +1,4 @@
-package com.example.martin.mppmovieapp;
+package com.example.martin.mppmovieapp.listeners;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

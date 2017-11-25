@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.database.sqlite.SQLiteConstraintException;
 
-import com.example.martin.mppmovieapp.OmdbAPI;
+import com.example.martin.mppmovieapp.web.OmdbAPI;
 import com.example.martin.mppmovieapp.R;
 import com.example.martin.mppmovieapp.model.ApiSearchResult;
 import com.example.martin.mppmovieapp.model.Movie;

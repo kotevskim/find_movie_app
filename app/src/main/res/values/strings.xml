@@ -2,4 +2,8 @@
     <string name="app_name">MppMovieApp</string>
     <string name="omdb_api_key">c24fc4e1</string>
     <string name="database_name">Movie Database</string>
+    <string name="omdb_api_base_url">http://www.omdbapi.com/</string>
+    <string name="plot_not_available">The plot for this movie is not available at the moment</string>
+    <string name="share_movie_message">Погледни го овој филм:</string>
+    <string name="share_movie_chooser_title">Сподели го филмот со...</string>
 </resources>

@@ -43,7 +43,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         Movie m = movieList.get(position);
         holder.tvMovieTitle.setText(m.getTitle());
         holder.tvMovieYear.setText(m.getYear());
-        holder.tvMovieId.setText(m.getImdbID());
         Picasso
                 .with(context)
                 .load(m.getPoster())
@@ -73,7 +72,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             ivMoviePoster = (ImageView) itemView.findViewById(R.id.item_movie_poster);
             tvMovieTitle = (TextView) itemView.findViewById(R.id.item_movie_title);
             tvMovieYear = (TextView) itemView.findViewById(R.id.item_movie_year);
-            tvMovieId = (TextView) itemView.findViewById(R.id.item_movie_id);
         }
 
     }
