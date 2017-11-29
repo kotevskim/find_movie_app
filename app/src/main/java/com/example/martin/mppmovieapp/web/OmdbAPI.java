@@ -11,7 +11,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by martin on 11/13/17.
+ * @author martin
  */
 
 public interface OmdbAPI {

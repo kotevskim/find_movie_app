@@ -13,12 +13,11 @@ import com.example.martin.mppmovieapp.R;
 import com.example.martin.mppmovieapp.model.Movie;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by martin on 11/13/17.
+ * @author martin
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
@@ -33,9 +32,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View veiw = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.rv_movie_item, parent, false);
-        return new MyViewHolder(veiw);
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -57,21 +56,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     public void setData(List<Movie> data) {
         this.movieList = data;
+        notifyDataSetChanged();
     }
 
     // View holder class
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView ivMoviePoster;
-        public TextView tvMovieTitle;
-        public TextView tvMovieYear;
-        public TextView tvMovieId;
+        ImageView ivMoviePoster;
+        TextView tvMovieTitle;
+        TextView tvMovieYear;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            ivMoviePoster = (ImageView) itemView.findViewById(R.id.item_movie_poster);
-            tvMovieTitle = (TextView) itemView.findViewById(R.id.item_movie_title);
-            tvMovieYear = (TextView) itemView.findViewById(R.id.item_movie_year);
+            ivMoviePoster = itemView.findViewById(R.id.item_movie_poster);
+            tvMovieTitle = itemView.findViewById(R.id.item_movie_title);
+            tvMovieYear = itemView.findViewById(R.id.item_movie_year);
         }
 
     }

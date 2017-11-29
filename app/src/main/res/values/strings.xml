@@ -6,4 +6,5 @@
     <string name="plot_not_available">The plot for this movie is not available at the moment</string>
     <string name="share_movie_message">Погледни го овој филм:</string>
     <string name="share_movie_chooser_title">Сподели го филмот со...</string>
+    <string name="toast_no_internet">Нема интернет конекција</string>
 </resources>

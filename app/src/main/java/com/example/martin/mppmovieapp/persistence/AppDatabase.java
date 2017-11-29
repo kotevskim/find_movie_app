@@ -9,7 +9,7 @@ import com.example.martin.mppmovieapp.R;
 import com.example.martin.mppmovieapp.model.Movie;
 
 /**
- * Created by martin on 11/25/17.
+ * @author martin
  */
 
 @Database(entities = {Movie.class}, version = 1)

@@ -10,7 +10,7 @@ import com.example.martin.mppmovieapp.persistence.AppDatabase;
 import java.util.List;
 
 /**
- * Created by martin on 11/25/17.
+ * @author martin
  */
 
 public class MoviesLoader extends AsyncTaskLoader<List<Movie>> {

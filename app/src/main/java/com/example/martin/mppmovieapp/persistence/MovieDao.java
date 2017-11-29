@@ -11,7 +11,7 @@ import com.example.martin.mppmovieapp.model.Movie;
 import java.util.List;
 
 /**
- * Created by martin on 11/25/17.
+ * @author martin
  */
 
 @Dao

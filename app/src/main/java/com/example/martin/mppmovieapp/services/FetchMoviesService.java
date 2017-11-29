@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
 
 import com.example.martin.mppmovieapp.web.OmdbAPI;
 import com.example.martin.mppmovieapp.R;
@@ -14,6 +15,7 @@ import com.example.martin.mppmovieapp.persistence.AppDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,8 +33,9 @@ public class FetchMoviesService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            String baseUrl = getString(R.string.omdb_api_base_url);
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://www.omdbapi.com/?")
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -42,8 +45,9 @@ public class FetchMoviesService extends IntentService {
             Call<ApiSearchResult> call = webApi.searchMovieByName(query, apiKey);
             try {
                 ApiSearchResult apiRes = call.execute().body();
-                List<Movie> movies = apiRes.Search;
-                notifyDataFetched(movies);
+                List<Movie> movies = (apiRes != null) ?
+                        apiRes.Search : Collections.<Movie>emptyList();
+                notifyDataFetched(movies); // send broadcast
                 storeInDatabase(movies);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -58,16 +62,14 @@ public class FetchMoviesService extends IntentService {
     }
 
     private void storeInDatabase(List<Movie> movies) {
-            AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
-            for (Movie m : movies) {
-                try {
-                    db.movieDao().insert(m);
-                } catch (SQLiteConstraintException e) {
-                    // Movie already exist in the database
-                    System.out.println("yes");
-                    continue;
-                }
+        AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
+        for (Movie m : movies) {
+            try {
+                db.movieDao().insert(m);
+            } catch (SQLiteConstraintException e) {
+                Log.i("DB_OP", m.getTitle() + " already exist in the Database");
             }
+        }
 
     }
 

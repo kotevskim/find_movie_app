@@ -8,14 +8,14 @@ import com.example.martin.mppmovieapp.persistence.AppDatabase;
 
 
 /**
- * Created by martin on 11/25/17.
+ * @author martin
  */
 
-public class DeleteMovieFromDbLoader extends AsyncTaskLoader<Void> {
+public class DeleteMovieFromDatabaseLoader extends AsyncTaskLoader<Void> {
 
     private Movie movie;
 
-    public DeleteMovieFromDbLoader(Context context, Movie movie) {
+    public DeleteMovieFromDatabaseLoader(Context context, Movie movie) {
         super(context);
         this.movie = movie;
     }

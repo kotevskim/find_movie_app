@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by martin on 11/25/17.
+ * @author martin
  */
 
 public class GetMovieFromServerLoader extends AsyncTaskLoader<Movie> {
@@ -39,8 +39,7 @@ public class GetMovieFromServerLoader extends AsyncTaskLoader<Movie> {
         String apiKey = getContext().getString(R.string.omdb_api_key);
         Call<Movie> call = webApi.getMovieById(movieId, apiKey, "full");
         try {
-            Movie result = call.execute().body();
-            return result;
+            return call.execute().body();
         } catch (IOException e) {
             e.printStackTrace();
         }
